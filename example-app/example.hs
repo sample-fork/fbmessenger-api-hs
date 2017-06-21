@@ -59,9 +59,20 @@ server verifyTokenStored pageTokenStored =
 
     echoMessage msg =
       case evtContent msg of
-        EmTextMessage _ _ text -> liftIO $ echoTextMessage text (evtSenderId msg)
+        EmTextMessage _ _ text -> liftIO $ echoImage text (evtSenderId msg)
         _                      -> return "[WARN]: this is just an example, no complex message is echoed."
 
+    echoImage text rcptId = do
+        m <- newManager tlsManagerSettings
+        let (Just rcpt) = recipient (Just rcptId) Nothing
+        let msgReq = sendImageMessageRequest Nothing rcpt (T.append "http://http://46.242.128.167:3000/" text)
+        msgRsp <- sendStructuredMessage (Just token) msgReq m
+        let logMsg = either (\_ -> printf "[ERROR]: failed to send image")
+                            (\_ -> printf "[INFO]: sent \"%s.jpg\" to %s" (T.unpack text) (show rcpt))
+                            msgRsp
+        return (T.pack logMsg)
+        
+        
     echoTextMessage text rcptId = do
       m <- newManager tlsManagerSettings
       -- create the recipient using the sender id
