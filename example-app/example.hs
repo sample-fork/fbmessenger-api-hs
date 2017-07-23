@@ -65,14 +65,14 @@ server verifyTokenStored pageTokenStored =
     echoImage text rcptId = do
         m <- newManager tlsManagerSettings
         let (Just rcpt) = recipient (Just rcptId) Nothing
-        let msgReq = sendImageMessageRequest Nothing rcpt (T.append "http://46.242.128.167:3000/" text)
+        let msgReq = sendImageMessageRequest Nothing rcpt (T.append "http://pl22.prosnet.pl:3000/" text)
         msgRsp <- sendStructuredMessage (Just token) msgReq m
         let logMsg = either (\err -> printf $ "[ERROR]: failed to send image " ++ show err )
                             (\_ -> printf "[INFO]: sent \"%s.jpg\" to %s" (T.unpack text) (show rcpt))
                             msgRsp
         return (T.pack logMsg)
-        
-        
+
+
     echoTextMessage text rcptId = do
       m <- newManager tlsManagerSettings
       -- create the recipient using the sender id
