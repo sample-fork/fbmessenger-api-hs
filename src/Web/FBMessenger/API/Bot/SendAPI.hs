@@ -38,6 +38,7 @@ import           Network.HTTP.Client               (Manager)
 import           Servant.API
 import           Servant.Client
 import           Servant.Client.MultipartFormData
+import           Servant.Server
 import           Web.FBMessenger.API.Bot.Requests
 import           Web.FBMessenger.API.Bot.Responses
 
@@ -102,29 +103,29 @@ sendTextMessage_
 
 
 -- | Send text messages. On success, minor informations on the sent message are returned.
-sendTextMessage :: Maybe Token -> SendTextMessageRequest -> Manager -> IO (Either ServantError MessageResponse)
+sendTextMessage :: Maybe Token -> SendTextMessageRequest -> Manager -> IO (Either ClientError MessageResponse)
 sendTextMessage token request manager =
-    runClientM (sendTextMessage_ token request) (ClientEnv manager graphAPIBaseUrl)
+    runClientM (sendTextMessage_ token request) (ClientEnv manager graphAPIBaseUrl Nothing)
 
 -- | Upload an image and send a structured messages containing it.
 --   On success, minor informations on the sent message are returned.
-uploadImageMessage :: Maybe Token -> UploadImageMessageRequest FileUpload -> Manager -> IO (Either ServantError MessageResponse)
+uploadImageMessage :: Maybe Token -> UploadImageMessageRequest FileUpload -> Manager -> IO (Either ClientError MessageResponse)
 uploadImageMessage token request manager =
-    runClientM (uploadImageMessage_ token request) (ClientEnv manager graphAPIBaseUrl)
+    runClientM (uploadImageMessage_ token request) (ClientEnv manager graphAPIBaseUrl Nothing)
 
 -- | Send a structured messages. This can be an image message (containing an image url)
 --   or any template message (generic, button, receipt).
 --   On success, minor informations on the sent message are returned.
-sendStructuredMessage :: Maybe Token -> SendStructuredMessageRequest -> Manager -> IO (Either ServantError MessageResponse)
+sendStructuredMessage :: Maybe Token -> SendStructuredMessageRequest -> Manager -> IO (Either ClientError MessageResponse)
 sendStructuredMessage token request manager =
-    runClientM (sendStructuredMessage_ token request) (ClientEnv manager graphAPIBaseUrl)
+    runClientM (sendStructuredMessage_ token request) (ClientEnv manager graphAPIBaseUrl Nothing)
 
 -- | Test if your bot's auth token is enabled. Requires no parameters.
 --   Return a simple object containing a boolean value indicating if the
 --   token is correctly registered.
-subscribedApps :: Maybe Token -> Manager -> IO (Either ServantError SubscriptionResponse)
+subscribedApps :: Maybe Token -> Manager -> IO (Either ClientError SubscriptionResponse)
 subscribedApps token manager =
-    runClientM (subscribedApps_ token) (ClientEnv manager graphAPIBaseUrl)
+    runClientM (subscribedApps_ token) (ClientEnv manager graphAPIBaseUrl Nothing)
 
 -- | Set a welcome message, this can be an image message (containing an image url)
 --   or any template message (generic, button, receipt).
@@ -132,24 +133,24 @@ subscribedApps token manager =
 --   facebook page_id.
 --   Return a simple object containing a string indicating if the welcome message
 --   is correctly registered.
-setWelcomeMessage :: Maybe Token -> Text -> WelcomeMessageRequest -> Manager -> IO (Either ServantError WelcomeMessageResponse)
+setWelcomeMessage :: Maybe Token -> Text -> WelcomeMessageRequest -> Manager -> IO (Either ClientError WelcomeMessageResponse)
 setWelcomeMessage token pageId message manager =
-    runClientM (welcomeMessage_ token pageId message) (ClientEnv manager graphAPIBaseUrl)
+    runClientM (welcomeMessage_ token pageId message) (ClientEnv manager graphAPIBaseUrl Nothing)
 
 -- | Remove the welcome message. In addition to the token, you need to provide
 --   the facebook page_id.
 --   Return a simple object containing a string indicating if the welcome
 --   message is correctly removed.
-removeWelcomeMessage :: Maybe Token -> Text -> Manager -> IO (Either ServantError WelcomeMessageResponse)
+removeWelcomeMessage :: Maybe Token -> Text -> Manager -> IO (Either ClientError WelcomeMessageResponse)
 removeWelcomeMessage token pageId manager =
-    runClientM (deleteWMessage_ token pageId welcomeDeleteMessage) (ClientEnv manager graphAPIBaseUrl)
+    runClientM (deleteWMessage_ token pageId welcomeDeleteMessage) (ClientEnv manager graphAPIBaseUrl Nothing)
 
 -- | Get the profile informations of a user. In addition to the token, you need
 --   to provide the user_id.
 --   Return a record containing the profile informations.
-getUserProfileInfo :: Maybe Token -> Text -> Manager -> IO (Either ServantError UserProfileResponse)
+getUserProfileInfo :: Maybe Token -> Text -> Manager -> IO (Either ClientError UserProfileResponse)
 getUserProfileInfo token userId manager =
-    runClientM (userProfile_ token userProfileFields userId) (ClientEnv manager graphAPIBaseUrl)
+    runClientM (userProfile_ token userProfileFields userId) (ClientEnv manager graphAPIBaseUrl Nothing)
 
 
 -- Helpers (not exported)

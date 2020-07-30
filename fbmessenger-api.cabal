@@ -30,8 +30,12 @@ library
                      , aeson
                      , bytestring
                      , http-client
-                     , servant        >= 0.9 && < 0.10
-                     , servant-client >= 0.9 && < 0.10
+                     , servant        >= 16
+                     , servant-client == 16
+                     , servant-client-core == 16
+                     , servant-server
+                     , binary
+                     , containers
                      , text
                      , mtl
                      , unordered-containers
@@ -55,8 +59,8 @@ executable example
                     ,  http-client-tls
                     ,  fbmessenger-api
                     ,  monad-logger
-                    ,  servant        >= 0.9 && < 0.10
-                    ,  servant-server >= 0.9 && < 0.10
+                    ,  servant        >= 16
+                    ,  servant-server 
                     ,  stm
                     ,  text
                     ,  mtl
