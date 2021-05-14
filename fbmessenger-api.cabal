@@ -31,8 +31,8 @@ library
                      , bytestring
                      , http-client
                      , servant        >= 16
-                     , servant-client == 16
-                     , servant-client-core == 16
+                     , servant-client 
+                     , servant-client-core 
                      , servant-server
                      , binary
                      , containers

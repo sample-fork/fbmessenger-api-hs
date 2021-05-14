@@ -105,27 +105,27 @@ sendTextMessage_
 -- | Send text messages. On success, minor informations on the sent message are returned.
 sendTextMessage :: Maybe Token -> SendTextMessageRequest -> Manager -> IO (Either ClientError MessageResponse)
 sendTextMessage token request manager =
-    runClientM (sendTextMessage_ token request) (ClientEnv manager graphAPIBaseUrl Nothing)
+    runClientM (sendTextMessage_ token request) (ClientEnv manager graphAPIBaseUrl Nothing defaultMakeClientRequest)
 
 -- | Upload an image and send a structured messages containing it.
 --   On success, minor informations on the sent message are returned.
 uploadImageMessage :: Maybe Token -> UploadImageMessageRequest FileUpload -> Manager -> IO (Either ClientError MessageResponse)
 uploadImageMessage token request manager =
-    runClientM (uploadImageMessage_ token request) (ClientEnv manager graphAPIBaseUrl Nothing)
+    runClientM (uploadImageMessage_ token request) (ClientEnv manager graphAPIBaseUrl Nothing defaultMakeClientRequest)
 
 -- | Send a structured messages. This can be an image message (containing an image url)
 --   or any template message (generic, button, receipt).
 --   On success, minor informations on the sent message are returned.
 sendStructuredMessage :: Maybe Token -> SendStructuredMessageRequest -> Manager -> IO (Either ClientError MessageResponse)
 sendStructuredMessage token request manager =
-    runClientM (sendStructuredMessage_ token request) (ClientEnv manager graphAPIBaseUrl Nothing)
+    runClientM (sendStructuredMessage_ token request) (ClientEnv manager graphAPIBaseUrl Nothing defaultMakeClientRequest)
 
 -- | Test if your bot's auth token is enabled. Requires no parameters.
 --   Return a simple object containing a boolean value indicating if the
 --   token is correctly registered.
 subscribedApps :: Maybe Token -> Manager -> IO (Either ClientError SubscriptionResponse)
 subscribedApps token manager =
-    runClientM (subscribedApps_ token) (ClientEnv manager graphAPIBaseUrl Nothing)
+    runClientM (subscribedApps_ token) (ClientEnv manager graphAPIBaseUrl Nothing defaultMakeClientRequest)
 
 -- | Set a welcome message, this can be an image message (containing an image url)
 --   or any template message (generic, button, receipt).
@@ -135,7 +135,7 @@ subscribedApps token manager =
 --   is correctly registered.
 setWelcomeMessage :: Maybe Token -> Text -> WelcomeMessageRequest -> Manager -> IO (Either ClientError WelcomeMessageResponse)
 setWelcomeMessage token pageId message manager =
-    runClientM (welcomeMessage_ token pageId message) (ClientEnv manager graphAPIBaseUrl Nothing)
+    runClientM (welcomeMessage_ token pageId message) (ClientEnv manager graphAPIBaseUrl Nothing defaultMakeClientRequest)
 
 -- | Remove the welcome message. In addition to the token, you need to provide
 --   the facebook page_id.
@@ -143,14 +143,14 @@ setWelcomeMessage token pageId message manager =
 --   message is correctly removed.
 removeWelcomeMessage :: Maybe Token -> Text -> Manager -> IO (Either ClientError WelcomeMessageResponse)
 removeWelcomeMessage token pageId manager =
-    runClientM (deleteWMessage_ token pageId welcomeDeleteMessage) (ClientEnv manager graphAPIBaseUrl Nothing)
+    runClientM (deleteWMessage_ token pageId welcomeDeleteMessage) (ClientEnv manager graphAPIBaseUrl Nothing defaultMakeClientRequest)
 
 -- | Get the profile informations of a user. In addition to the token, you need
 --   to provide the user_id.
 --   Return a record containing the profile informations.
 getUserProfileInfo :: Maybe Token -> Text -> Manager -> IO (Either ClientError UserProfileResponse)
 getUserProfileInfo token userId manager =
-    runClientM (userProfile_ token userProfileFields userId) (ClientEnv manager graphAPIBaseUrl Nothing)
+    runClientM (userProfile_ token userProfileFields userId) (ClientEnv manager graphAPIBaseUrl Nothing defaultMakeClientRequest)
 
 
 -- Helpers (not exported)

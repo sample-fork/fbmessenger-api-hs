@@ -37,8 +37,7 @@ import           Servant.API
 import           Servant.Client
 import qualified Servant.Client.Core                   as Core
 import           Servant.Client.Internal.HttpClient    (catchConnectionError,
-                                                        clientResponseToResponse,
-                                                        requestToClientRequest)
+                                                        clientResponseToResponse)
 
 -- | A type that can be converted to a multipart/form-data value.
 class ToMultipartFormData a where
@@ -54,7 +53,7 @@ instance (Core.RunClient m, ToMultipartFormData b, MimeUnrender ct a, cts' ~ (ct
   type Client m (MultipartFormDataReqBody b :> Post cts' a) = b-> ClientM a
   clientWithRoute _pm Proxy req reqData =
     let requestToClientRequest' req' baseurl' = do
-          let requestWithoutBody = requestToClientRequest baseurl' req'
+          let requestWithoutBody = defaultMakeClientRequest baseurl' req'
           formDataBody (toMultipartFormData reqData) requestWithoutBody
     in snd <$> performRequestCT' requestToClientRequest' (Proxy :: Proxy ct) H.methodPost req
 
